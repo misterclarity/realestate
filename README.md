@@ -26,9 +26,23 @@ The site goes live at `https://<username>.github.io/<repository>/` a minute or
 two later. `.nojekyll` is committed so GitHub serves the files as-is instead of
 running them through Jekyll.
 
+## Data
+
+Figures are drawn from the public sources listed in the "Data Sources &
+Methodology" section and are indicative only. Not investment advice.
+
+Two caveats worth carrying forward if you update the numbers:
+
+- **The global totals and the country rows use different methodologies.** The
+  $624.62T / $506.73T headline figures are Statista *forecast market volumes*.
+  The per-country capitalizations come from national sources measuring
+  *realised asset value* (Zillow for the US, Savills for the UK). They are not
+  comparable and deliberately do not sum to the global total.
+- **China's capitalization has a very wide estimate range.** The ~$33T shown is
+  household balance-sheet real estate; Goldman Sachs puts unsold inventory
+  alone at ~$13T. Treat it as an order of magnitude, not a measurement.
+
 ## Notes
 
-- All figures on the page are demonstrative, aggregated from the sources listed
-  in the "Data Sources & Methodology" section. Not investment advice.
 - The mobile hamburger button in the nav is currently decorative — the nav links
   are hidden below the `md` breakpoint and no drawer is wired up yet.
