@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yield &amp; Cap: Global Real Estate Software Solutions</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6', // Teal 500
+                            600: '#0d9488', // Teal 600
+                            900: '#134e4a', // Teal 900
+                            950: '#042f2e', // Teal 950
+                        },
+                        navy: {
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .tab-active {
+            border-bottom-width: 2px;
+            border-color: #14b8a6;
+            color: #14b8a6;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            color: #64748b;
+            border-bottom-width: 2px;
+            border-color: transparent;
+        }
+        .tab-inactive:hover {
+            color: #334155;
+            border-color: #cbd5e1;
+        }
+        .fade-in {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Modal Animations */
+        .modal-enter {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
+        .modal-enter-backdrop {
+            animation: backdropFadeIn 0.3s ease-out forwards;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        @keyframes backdropFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Custom Scrollbar for table */
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f8fafc;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Custom Tooltip Styles */
+        .tooltip-container {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: help;
+            border-bottom: 2px dotted #94a3b8;
+            transition: border-color 0.2s;
+        }
+        .tooltip-container:hover {
+            border-bottom-color: #14b8a6;
+        }
+        .tooltip-text {
+            visibility: hidden;
+            width: max-content;
+            max-width: 240px;
+            background-color: #0f172a;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px 12px;
+            position: absolute;
+            z-index: 100;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.95);
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1.4;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2);
+            pointer-events: none;
+            white-space: normal;
+        }
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #0f172a transparent transparent transparent;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-40 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <div class="w-10 h-10 rounded-lg bg-brand-600 flex items-center justify-center text-white">
+                        <i class="fa-solid fa-chart-line text-xl"></i>
+                    </div>
+                    <span class="font-serif font-bold text-2xl text-navy-900 tracking-tight">CapYield<span class="text-brand-600">.</span></span>
+                </div>
+                <div class="hidden md:flex space-x-6 lg:space-x-8">
+                    <a href="#the-answer" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Market Answer</a>
+                    <a href="#residential-dashboard" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Dashboard</a>
+                    <a href="#software-solutions" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Software</a>
+                    <a href="#data-models" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Methodology</a>
+                </div>
+                <div class="md:hidden">
+                    <button class="text-slate-600 hover:text-brand-600"><i class="fa-solid fa-bars text-2xl"></i></button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden bg-navy-900 text-white">
+        <div class="absolute inset-0 z-0 opacity-20">
+            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop" alt="Global Real Estate" class="w-full h-full object-cover" onerror="this.style.display='none'">
+            <div class="absolute inset-0 bg-gradient-to-r from-navy-900 to-transparent"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-100 border border-brand-500/30 text-sm font-medium mb-6">
+                    <i class="fa-solid fa-globe"></i> Global Market Analysis 2026
+                </div>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6">
+                    Tracking the World's Most <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-400 to-emerald-300">Profitable Real Estate.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed">
+                    Uncover the software solutions institutional investors use to identify the highest yields and largest capitalizations in the $624 Trillion global property market.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#residential-dashboard" class="px-8 py-4 rounded-lg bg-brand-600 hover:bg-brand-500 text-white font-semibold transition-all shadow-lg hover:shadow-brand-500/25 flex items-center gap-2">
+                        View Country Dashboard <i class="fa-solid fa-arrow-down"></i>
+                    </a>
+                    <a href="#software-solutions" class="px-8 py-4 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 font-semibold transition-all flex items-center gap-2">
+                        Explore Platforms
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Answer Section -->
+    <section id="the-answer" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-brand-600 font-semibold tracking-wide uppercase text-sm mb-2">Current Market Reality</h2>
+                <h3 class="text-3xl md:text-4xl font-serif font-bold text-navy-900">The 2026 Global Yield &amp; <span class="tooltip-container">Cap<span class="tooltip-text">Market Capitalization: The total estimated monetary value of all real estate assets in a given sector or market.</span></span> Answer</h3>
+                <p class="mt-4 text-slate-600 max-w-3xl mx-auto text-lg">
+                    Before exploring the software that crunches the numbers, here is the empirical answer to your question based on Q1-Q3 2026 institutional data.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10">
+                <!-- Cap Card -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-200 hover:shadow-xl transition-shadow relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-brand-100 rounded-full blur-3xl -mr-10 -mt-10 opacity-60"></div>
+                    <div class="flex items-center justify-between mb-6 relative z-10">
+                        <div class="w-14 h-14 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-center text-2xl text-blue-600">
+                            <i class="fa-solid fa-city"></i>
+                        </div>
+                        <span class="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full">Largest Capitalization</span>
+                    </div>
+                    <h4 class="text-2xl font-bold text-navy-900 mb-2 relative z-10">Residential Real Estate</h4>
+                    <p class="text-4xl font-black text-brand-600 mb-4 relative z-10">$506.7 Trillion <a href="#sources" class="text-sm font-normal text-brand-500 hover:underline cursor-pointer align-top">[1]</a> <span class="text-sm font-normal text-slate-500 uppercase tracking-wide">Global Cap</span></p>
+                    <p class="text-slate-600 leading-relaxed relative z-10">
+                        Of the projected $624.62 Trillion total global real estate market in 2026, the <strong>Residential Sector</strong> holds the absolute highest capitalization. Driven by chronic housing shortages, global population growth, and rapid urbanization, it towers over Commercial, Industrial, and Agricultural sectors.
+                    </p>
+                </div>
+
+                <!-- Yield Card -->
+                <div class="bg-slate-50 rounded-2xl p-8 border border-slate-200 hover:shadow-xl transition-shadow relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-100 rounded-full blur-3xl -mr-10 -mt-10 opacity-60"></div>
+                    <div class="flex items-center justify-between mb-6 relative z-10">
+                        <div class="w-14 h-14 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-center text-2xl text-emerald-600">
+                            <i class="fa-solid fa-money-bill-trend-up"></i>
+                        </div>
+                        <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">Highest Yields</span>
+                    </div>
+                    <h4 class="text-2xl font-bold text-navy-900 mb-2 relative z-10">Emerging Markets &amp; UAE</h4>
+                    <p class="text-4xl font-black text-brand-600 mb-4 relative z-10">7% - 10% <a href="#sources" class="text-sm font-normal text-brand-500 hover:underline cursor-pointer align-top">[3]</a> <span class="text-sm font-normal text-slate-500 uppercase tracking-wide">Gross <span class="tooltip-container text-slate-500">ROI<span class="tooltip-text">Return on Investment (Gross): Annual rent collected divided by the property purchase price, before factoring in taxes, maintenance, and insurance.</span></span></span></p>
+                    <p class="text-slate-600 leading-relaxed relative z-10">
+                        The highest rental yields currently belong to emerging growth markets and hyper-optimized tax havens. In 2026, <strong>Dubai (UAE)</strong> generates steady 8-10% yields with 0% property tax. <strong>Georgia (Tbilisi &amp; Batumi)</strong> offers 7-10% on low entry costs, while hubs like <strong>Colombia</strong> report 6-10% yields fueled by tourism.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Country by Country Dashboard -->
+    <section id="residential-dashboard" class="py-20 bg-slate-100 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div class="max-w-3xl">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-bold mb-4">
+                        <i class="fa-solid fa-database"></i> Live Macro &amp; Numbeo Pricing Data
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold text-navy-900 mb-4">Global Residential Demand Dashboard</h2>
+                    <p class="text-slate-600 text-lg">
+                        Comparing macroeconomic drivers against current <strong>Numbeo Pricing Features</strong> (Price per Sq.m &amp; Gross Rental Yield in City Centres) across leading North American, Asian, and expanded European markets.
+                    </p>
+                </div>
+                <div class="shrink-0 flex gap-2">
+                    <button class="bg-white border border-slate-300 text-slate-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-slate-50 transition shadow-sm"><i class="fa-solid fa-download mr-2"></i> Export CSV</button>
+                </div>
+            </div>
+
+            <!-- Dashboard Table -->
+            <div class="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden">
+                <div class="overflow-x-auto custom-scrollbar pb-4">
+                    <table class="w-full text-left border-collapse min-w-[1100px]">
+                        <thead>
+                            <tr class="bg-slate-800 text-white text-xs uppercase tracking-wider">
+                                <th class="p-5 font-semibold sticky left-0 bg-slate-800 z-20 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.3)]">Country Market</th>
+                                <th class="p-5 font-semibold">Est. Resi <span class="tooltip-container border-slate-400">Cap<span class="tooltip-text">Estimated Total Market Capitalization of all residential real estate in the country.</span></span></th>
+                                <th class="p-5 font-semibold min-w-[180px]">Urbanization Rate</th>
+                                <th class="p-5 font-semibold">Pop. Growth <span class="tooltip-container border-slate-400">YoY<span class="tooltip-text">Year-over-Year: The percentage change in population compared to the previous 12 months.</span></span></th>
+                                <th class="p-5 font-semibold min-w-[200px]">Housing Deficit (Shortage)</th>
+                                <th class="p-5 font-semibold bg-slate-700 border-l border-slate-600 text-brand-300"><i class="fa-solid fa-tags mr-1"></i> Numbeo Price / m² <br><span class="text-[10px] text-slate-400 capitalize font-normal">(City Centre Avg)</span></th>
+                                <th class="p-5 font-semibold bg-slate-700 text-emerald-300"><i class="fa-solid fa-percent mr-1"></i> Numbeo Yield <br><span class="text-[10px] text-slate-400 capitalize font-normal">(Gross City Centre)</span></th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+
+                            <!-- USA -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇺🇸</div>
+                                        <div>
+                                            <p class="font-bold text-navy-900">United States</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$48.2 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1">
+                                        <span class="font-medium text-slate-700">83.4%</span>
+                                    </div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5">
+                                        <div class="bg-blue-500 h-1.5 rounded-full" style="width: 83.4%"></div>
+                                    </div>
+                                </td>
+                                <td class="p-5">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-arrow-trend-up text-brand-500 text-xs"></i>
+                                        <span class="font-medium text-slate-700">+0.5%</span>
+                                    </div>
+                                </td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-700">~4.5M Units</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$4,800</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-emerald-600">~5.8%</td>
+                            </tr>
+
+                            <!-- UK -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇬🇧</div>
+                                        <div>
+                                            <p class="font-bold text-navy-900">United Kingdom</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$10.4 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">84.6%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-blue-600 h-1.5 rounded-full" style="width: 84.6%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up text-brand-500 text-xs"></i><span class="font-medium text-slate-700">+0.4%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-700">~4.3M Units</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$6,500</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-emerald-600">~4.8%</td>
+                            </tr>
+
+                            <!-- Germany (New) -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇩🇪</div>
+                                        <div><p class="font-bold text-navy-900">Germany</p></div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$11.2 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">77.5%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-indigo-400 h-1.5 rounded-full" style="width: 77.5%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-down text-orange-500 text-xs"></i><span class="font-medium text-slate-700">-0.1%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-amber-100 text-amber-700">~800k Units</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$5,800</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-emerald-600">~3.4%</td>
+                            </tr>
+
+                            <!-- France (New) -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇫🇷</div>
+                                        <div><p class="font-bold text-navy-900">France</p></div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$9.8 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">81.2%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-indigo-500 h-1.5 rounded-full" style="width: 81.2%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up text-brand-500 text-xs"></i><span class="font-medium text-slate-700">+0.2%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-amber-100 text-amber-700">~500k Units</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$6,100</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-emerald-600">~4.1%</td>
+                            </tr>
+
+                            <!-- Spain (New) -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇪🇸</div>
+                                        <div><p class="font-bold text-navy-900">Spain</p></div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$6.5 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">81.1%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-indigo-500 h-1.5 rounded-full" style="width: 81.1%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up text-brand-500 text-xs"></i><span class="font-medium text-slate-700">+0.1%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">~250k Units</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$3,500</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-emerald-600">~5.5%</td>
+                            </tr>
+
+                            <!-- Italy (New) -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇮🇹</div>
+                                        <div><p class="font-bold text-navy-900">Italy</p></div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$7.2 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">71.4%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-teal-400 h-1.5 rounded-full" style="width: 71.4%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-down text-orange-500 text-xs"></i><span class="font-medium text-slate-700">-0.3%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-emerald-100 text-emerald-700">Balanced / Local</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$3,200</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-emerald-600">~4.9%</td>
+                            </tr>
+
+                            <!-- Switzerland (New) -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇨🇭</div>
+                                        <div><p class="font-bold text-navy-900">Switzerland</p></div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$3.5 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">74.0%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-teal-500 h-1.5 rounded-full" style="width: 74.0%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up text-brand-500 text-xs"></i><span class="font-medium text-slate-700">+0.6%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-slate-100 text-slate-700 border border-slate-200">Tight Supply</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$14,500</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-brand-600">~2.8%</td>
+                            </tr>
+
+                            <!-- UAE -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇦🇪</div>
+                                        <div><p class="font-bold text-navy-900">UAE (Dubai)</p></div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$1.1 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">88.2%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-indigo-600 h-1.5 rounded-full" style="width: 88.2%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up text-brand-500 text-xs"></i><span class="font-medium text-slate-700">+1.2%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-emerald-100 text-emerald-700">High Dev Phase</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$4,200</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-emerald-600">~8.5%</td>
+                            </tr>
+
+                            <!-- China -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇨🇳</div>
+                                        <div><p class="font-bold text-navy-900">China</p></div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$114.5 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">66.2%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-blue-400 h-1.5 rounded-full" style="width: 66.2%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-down text-orange-500 text-xs"></i><span class="font-medium text-slate-700">-0.1%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-amber-100 text-amber-700">Tier 3 Oversupply</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$9,200</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-orange-500">~1.5%</td>
+                            </tr>
+
+                            <!-- India -->
+                            <tr class="hover:bg-slate-50 transition-colors group">
+                                <td class="p-5 sticky left-0 bg-white group-hover:bg-slate-50 z-10 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-lg shadow-sm border border-slate-200">🇮🇳</div>
+                                        <div><p class="font-bold text-navy-900">India</p></div>
+                                    </div>
+                                </td>
+                                <td class="p-5 font-semibold text-slate-700">$12.8 Trillion</td>
+                                <td class="p-5">
+                                    <div class="flex items-center justify-between text-xs mb-1"><span class="font-medium text-slate-700">36.5%</span></div>
+                                    <div class="w-full bg-slate-200 rounded-full h-1.5"><div class="bg-brand-500 h-1.5 rounded-full" style="width: 36.5%"></div></div>
+                                </td>
+                                <td class="p-5"><div class="flex items-center gap-2"><i class="fa-solid fa-arrow-trend-up text-brand-500 text-xs"></i><span class="font-medium text-slate-700">+0.9%</span></div></td>
+                                <td class="p-5"><span class="inline-flex px-2 py-1 rounded text-xs font-bold bg-red-100 text-red-700">~19.5M Units</span></td>
+                                <td class="p-5 border-l border-slate-100 bg-slate-50/50 font-mono font-medium text-slate-700">~$1,800</td>
+                                <td class="p-5 bg-slate-50/50 font-bold text-brand-600">~3.2%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bg-slate-50 p-4 border-t border-slate-200 text-xs text-slate-500 flex flex-col md:flex-row items-center justify-between gap-2">
+                    <p>Source: Aggregated Global PropTech Data &amp; <a href="https://www.numbeo.com/property-investment/" target="_blank" rel="noopener" class="text-brand-600 hover:underline">Numbeo Global Property Investment Indexes (2026)</a></p>
+                    <p>Pricing reflects Central City Averages in USD.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Software Solutions Section -->
+    <section id="software-solutions" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-12">
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-navy-900 mb-4">The Software Solutions</h2>
+                <p class="text-slate-600 max-w-2xl text-lg">
+                    Finding the intersection of massive capitalization and extreme yields requires processing billions of data points. Here are the leading platforms investors use to aggregate the metrics seen above.
+                </p>
+            </div>
+
+            <!-- Custom Tabs (Javascript handled) -->
+            <div class="border-b border-slate-200 mb-8 overflow-x-auto">
+                <nav class="-mb-px flex space-x-8" aria-label="Tabs" id="software-tabs">
+                    <button onclick="switchTab('institutional')" class="tab-btn tab-active whitespace-nowrap py-4 px-1 font-medium text-sm transition-colors" data-target="institutional">
+                        Institutional &amp; Commercial Funds
+                    </button>
+                    <button onclick="switchTab('residential')" class="tab-btn tab-inactive whitespace-nowrap py-4 px-1 font-medium text-sm transition-colors" data-target="residential">
+                        Residential &amp; Hybrid Analytics
+                    </button>
+                    <button onclick="switchTab('str')" class="tab-btn tab-inactive whitespace-nowrap py-4 px-1 font-medium text-sm transition-colors" data-target="str">
+                        Short-Term High-Yield (<span class="tooltip-container">STR<span class="tooltip-text">Short-Term Rental: Properties leased for short periods, typically less than 30 days (e.g., Airbnb, VRBO).</span></span>)
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Tab Contents -->
+            <div id="tab-content" class="min-h-[600px]">
+
+                <!-- Institutional Tab -->
+                <div id="institutional" class="tab-pane fade-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- MSCI / RCA -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-navy-900 rounded flex items-center justify-center text-white"><i class="fa-solid fa-building-columns"></i></div>
+                            <h3 class="text-xl font-bold text-navy-900">MSCI Real Capital Analytics</h3>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">Best for: Global Cap &amp; Commercial</span>
+                        </div>
+                        <p class="text-slate-600 text-sm flex-grow mb-6">
+                            RCA is the industry standard for tracking institutional-grade commercial property transactions, capital markets intelligence, and true global market capitalization across 170+ countries.
+                        </p>
+                        <button onclick="showModal('MSCI Real Capital Analytics')" class="mt-auto w-full block text-center py-2 px-4 border border-brand-500 text-brand-600 rounded hover:bg-brand-50 transition-colors font-medium">Platform Details</button>
+                    </div>
+
+                    <!-- Preqin Pro -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-blue-800 rounded flex items-center justify-center text-white"><i class="fa-solid fa-chart-pie"></i></div>
+                            <h3 class="text-xl font-bold text-navy-900">Preqin Pro</h3>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">Best for: Real Estate Funds Data</span>
+                        </div>
+                        <p class="text-slate-600 text-sm flex-grow mb-6">
+                            Boasting unsurpassed private real estate coverage, Preqin tracks over 14,000 funds. It allows analysts to see which global real estate funds deliver the highest net-to-LP returns.
+                        </p>
+                        <button onclick="showModal('Preqin Pro')" class="mt-auto w-full block text-center py-2 px-4 border border-brand-500 text-brand-600 rounded hover:bg-brand-50 transition-colors font-medium">Platform Details</button>
+                    </div>
+
+                    <!-- Exquance / ModelTree -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-emerald-700 rounded flex items-center justify-center text-white"><i class="fa-solid fa-tree"></i></div>
+                            <h3 class="text-xl font-bold text-navy-900">Exquance ModelTree</h3>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">Best for: <span class="tooltip-container">DCF<span class="tooltip-text">Discounted Cash Flow: A valuation method used to estimate the value of an investment based on its expected future cash flows.</span></span> Modeling</span>
+                        </div>
+                        <p class="text-slate-600 text-sm flex-grow mb-6">
+                            A powerful platform for cash flow modeling, direct capitalization valuation, and fund management. Used by private equity to run complex "what-if" scenarios across global portfolios.
+                        </p>
+                        <button onclick="showModal('Exquance ModelTree')" class="mt-auto w-full block text-center py-2 px-4 border border-brand-500 text-brand-600 rounded hover:bg-brand-50 transition-colors font-medium">Platform Details</button>
+                    </div>
+                </div>
+
+                <!-- Residential Tab -->
+                <div id="residential" class="tab-pane hidden fade-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- BestYieldFinder -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-indigo-600 rounded flex items-center justify-center text-white"><i class="fa-solid fa-magnifying-glass-chart"></i></div>
+                            <h3 class="text-xl font-bold text-navy-900">BestYieldFinder</h3>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">Best for: Direct Yield Comparison</span>
+                        </div>
+                        <p class="text-slate-600 text-sm flex-grow mb-6">
+                            Specifically built to answer the yield question. It maps districts across multiple countries side-by-side, analyzing sale price versus rental data to pinpoint the absolute highest gross yields on a street level.
+                        </p>
+                        <button onclick="showModal('BestYieldFinder')" class="mt-auto w-full block text-center py-2 px-4 border border-brand-500 text-brand-600 rounded hover:bg-brand-50 transition-colors font-medium">Platform Details</button>
+                    </div>
+
+                    <!-- PriceHubble -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-sky-500 rounded flex items-center justify-center text-white"><i class="fa-solid fa-robot"></i></div>
+                            <h3 class="text-xl font-bold text-navy-900">PriceHubble</h3>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">Best for: <span class="tooltip-container">AVM<span class="tooltip-text">Automated Valuation Models: Software services that provide real estate property valuations using mathematical modeling and large databases.</span></span></span>
+                        </div>
+                        <p class="text-slate-600 text-sm flex-grow mb-6">
+                            Utilizes Big Data and proprietary AI algorithms to determine residential property valuations and rental estimates in real-time. Ideal for managing large portfolios in the $506T residential market.
+                        </p>
+                        <button onclick="showModal('PriceHubble')" class="mt-auto w-full block text-center py-2 px-4 border border-brand-500 text-brand-600 rounded hover:bg-brand-50 transition-colors font-medium">Platform Details</button>
+                    </div>
+                </div>
+
+                <!-- STR Tab -->
+                <div id="str" class="tab-pane hidden fade-in grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Airbtics -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-rose-500 rounded flex items-center justify-center text-white"><i class="fa-solid fa-house-signal"></i></div>
+                            <h3 class="text-xl font-bold text-navy-900">Airbtics</h3>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">Best for: Global STR Analytics</span>
+                        </div>
+                        <p class="text-slate-600 text-sm flex-grow mb-6">
+                            Since Short-Term Rentals (<span class="tooltip-container">STR<span class="tooltip-text">Short-Term Rental: Properties leased for short periods, typically less than 30 days (e.g., Airbnb, VRBO).</span></span>) often offer the highest yields, Airbtics provides global, neighborhood-level ADR (Average Daily Rate), occupancy, and ROI data.
+                        </p>
+                        <button onclick="showModal('Airbtics')" class="mt-auto w-full block text-center py-2 px-4 border border-brand-500 text-brand-600 rounded hover:bg-brand-50 transition-colors font-medium">Platform Details</button>
+                    </div>
+
+                    <!-- AirDNA -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-violet-600 rounded flex items-center justify-center text-white"><i class="fa-solid fa-map-location-dot"></i></div>
+                            <h3 class="text-xl font-bold text-navy-900">AirDNA</h3>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">Best for: Vacation Rental Forecasting</span>
+                        </div>
+                        <p class="text-slate-600 text-sm flex-grow mb-6">
+                            One of the most recognized tools globally. AirDNA aggregates millions of short-term rental listings to track supply, demand, and yield fluctuations across thousands of international destinations.
+                        </p>
+                        <button onclick="showModal('AirDNA')" class="mt-auto w-full block text-center py-2 px-4 border border-brand-500 text-brand-600 rounded hover:bg-brand-50 transition-colors font-medium">Platform Details</button>
+                    </div>
+
+                    <!-- Mashvisor -->
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-10 h-10 bg-teal-600 rounded flex items-center justify-center text-white"><i class="fa-solid fa-code-compare"></i></div>
+                            <h3 class="text-xl font-bold text-navy-900">Mashvisor</h3>
+                        </div>
+                        <div class="mb-4">
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">Best for: <span class="tooltip-container">LTR<span class="tooltip-text">Long-Term Rental: Standard residential leases usually lasting 6 to 12 months or longer.</span></span> vs STR Comparison</span>
+                        </div>
+                        <p class="text-slate-600 text-sm flex-grow mb-6">
+                            Allows investors to simultaneously calculate and compare Long-Term Rental and Short-Term Rental yields on the same property to deduce the absolute maximum return possible.
+                        </p>
+                        <button onclick="showModal('Mashvisor')" class="mt-auto w-full block text-center py-2 px-4 border border-brand-500 text-brand-600 rounded hover:bg-brand-50 transition-colors font-medium">Platform Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How they Work (Technical Summary) -->
+    <section id="data-models" class="py-20 bg-navy-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-3xl md:text-4xl font-serif font-bold mb-6">How These Platforms Calculate the Global <span class="tooltip-container border-slate-500 text-brand-300">Cap Rate<span class="tooltip-text">Capitalization Rate: The fundamental metric for real estate valuation. Calculated by dividing Net Operating Income (NOI) by the current market value.</span></span></h2>
+                    <p class="text-slate-300 mb-6 text-lg leading-relaxed">
+                        Answering "What is the biggest yield globally?" is notoriously difficult due to decentralized data. Modern software solutions solve this using three core methodologies:
+                    </p>
+                    <ul class="space-y-6">
+                        <li class="flex gap-4">
+                            <div class="mt-1 w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 shrink-0">1</div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">Algorithmic Valuation Models (<span class="tooltip-container border-slate-500 text-brand-300">AVMs<span class="tooltip-text">Automated Valuation Models: Software services that provide real estate property valuations using mathematical modeling and large databases.</span></span>)</h4>
+                                <p class="text-slate-400 text-sm">Platforms scrape millions of MLS records, public deeds, and digital listings to estimate current market values, creating a baseline denominator for yield calculations.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="mt-1 w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 shrink-0">2</div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">Direct Capitalization Formulas</h4>
+                                <p class="text-slate-400 text-sm">Tools automate the formula: <span class="tooltip-container border-slate-500 text-brand-300">NOI<span class="tooltip-text">Net Operating Income: Total revenue from the property minus operating expenses (maintenance, taxes, insurance), excluding mortgage payments.</span></span> / Current Market Value = Cap Rate. They ingest country-specific taxation and maintenance variables to produce true net yield figures.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="mt-1 w-8 h-8 rounded-full bg-brand-500/20 flex items-center justify-center text-brand-400 shrink-0">3</div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">API Integrations with OTAs</h4>
+                                <p class="text-slate-400 text-sm">STR software plugs directly into the backend APIs of booking platforms (Airbnb, VRBO) to track real-time revenue pacing, establishing hyper-accurate yield projections for tourist hotspots.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 shadow-2xl relative">
+                    <!-- Dashboard Mockup -->
+                    <div class="flex items-center justify-between mb-8 border-b border-slate-700 pb-4">
+                        <div>
+                            <p class="text-sm text-slate-400 font-medium">Top Performing Global Markets (2026)</p>
+                            <h4 class="text-2xl font-bold">Yield Comparison Matrix</h4>
+                        </div>
+                        <i class="fa-solid fa-chart-bar text-brand-500 text-2xl"></i>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- Row 1 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Dubai, UAE (Residential Freehold)</span>
+                                <span class="font-bold text-emerald-400">8.5% - 9.5%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                <div class="bg-emerald-400 h-2 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <!-- Row 2 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Batumi, Georgia (Coastal STR)</span>
+                                <span class="font-bold text-emerald-400">8.8%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                <div class="bg-emerald-400 h-2 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <!-- Row 3 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Punta Cana, Dom. Rep. (Tourism)</span>
+                                <span class="font-bold text-brand-400">7.5%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                <div class="bg-brand-400 h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <!-- Row 4 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Madrid, Spain (Urban LTR)</span>
+                                <span class="font-bold text-brand-400">5.5%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                <div class="bg-brand-400 h-2 rounded-full" style="width: 55%"></div>
+                            </div>
+                        </div>
+                        <!-- Row 5 -->
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>London, UK (Commercial Prime)</span>
+                                <span class="font-bold text-slate-400">4.8%</span>
+                            </div>
+                            <div class="w-full bg-slate-700 rounded-full h-2">
+                                <div class="bg-slate-400 h-2 rounded-full" style="width: 48%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Data Sources & Methodology -->
+    <section id="sources" class="py-16 bg-slate-50 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10">
+                <h2 class="text-2xl md:text-3xl font-serif font-bold text-navy-900 mb-2">Data Sources &amp; Methodology</h2>
+                <p class="text-slate-600">The macroeconomic metrics, market capitalizations, and yields presented on this dashboard are aggregated from the following leading global institutional reports and datasets.</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Source 1 -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-xs font-bold">[1]</span>
+                        <h4 class="font-bold text-navy-900">Market Capitalization</h4>
+                    </div>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li><strong>Savills World Research:</strong> Primary baseline for the ~$624T total global property value and ~$506T residential share projections.</li>
+                        <li><strong>MSCI Real Estate Market Size:</strong> Used for commercial market cap adjustments and institutional cross-border capital flows.</li>
+                    </ul>
+                </div>
+
+                <!-- Source 2 -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-xs font-bold">[2]</span>
+                        <h4 class="font-bold text-navy-900">Population &amp; Urbanization</h4>
+                    </div>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li><strong>The World Bank Data:</strong> National urbanization rates and urban population growth tracking.</li>
+                        <li><strong>UN DESA (Population Division):</strong> World Population Prospects data for YoY demographic shifts.</li>
+                    </ul>
+                </div>
+
+                <!-- Source 3 -->
+                <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-6 h-6 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center text-xs font-bold">[3]</span>
+                        <h4 class="font-bold text-navy-900">Global Yields &amp; Pricing</h4>
+                    </div>
+                    <ul class="text-sm text-slate-600 space-y-2">
+                        <li><strong>Numbeo Property Investment Index:</strong> Provides the crowdsourced baseline for Price per Sq.m in City Centres and associated Gross Rental Yields for European markets.</li>
+                        <li><strong>Global Property Guide:</strong> Benchmark data for gross rental yields across emerging hubs.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12 text-center text-slate-600">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-center items-center gap-2 mb-4 text-navy-900">
+                <i class="fa-solid fa-chart-line text-brand-600 text-xl"></i>
+                <span class="font-serif font-bold text-xl">CapYield<span class="text-brand-600">.</span></span>
+            </div>
+            <p class="max-w-2xl mx-auto text-sm mb-6">
+                © 2026 CapYield Global Analytics. All data presented is demonstrative for macroeconomic software analysis. Always perform your own due diligence and consult with licensed financial advisors before making investment decisions.
+            </p>
+            <div class="flex justify-center space-x-6">
+                <a href="javascript:void(0)" class="text-slate-400 hover:text-brand-600 transition"><i class="fa-brands fa-linkedin text-xl"></i></a>
+                <a href="javascript:void(0)" class="text-slate-400 hover:text-brand-600 transition"><i class="fa-brands fa-twitter text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Modal -->
+    <div id="details-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div id="modal-backdrop" class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onclick="closeModal()"></div>
+
+        <!-- Modal Content -->
+        <div id="modal-content" class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 text-center transform transition-all">
+            <div class="mx-auto w-16 h-16 bg-brand-100 rounded-full flex items-center justify-center mb-4 text-brand-600 text-2xl">
+                <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <h3 id="modal-title" class="text-2xl font-bold text-navy-900 mb-2">Platform Details</h3>
+            <p class="text-slate-600 mb-8">
+                Detailed integration specs and pricing for <span id="platform-name" class="font-semibold text-brand-600"></span> will be available in the upcoming full dashboard release.
+            </p>
+            <button onclick="closeModal()" class="w-full bg-navy-900 hover:bg-slate-800 text-white font-semibold py-3 px-4 rounded-lg transition-colors">
+                Got it, Thanks
+            </button>
+        </div>
+    </div>
+
+    <!-- Interactive Script -->
+    <script>
+        function switchTab(tabId) {
+            // Get all buttons and panes
+            const buttons = document.querySelectorAll('.tab-btn');
+            const panes = document.querySelectorAll('.tab-pane');
+
+            // Remove active state from all buttons and add inactive
+            buttons.forEach(btn => {
+                btn.classList.remove('tab-active');
+                btn.classList.add('tab-inactive');
+            });
+
+            // Hide all panes
+            panes.forEach(pane => {
+                pane.classList.add('hidden');
+                pane.classList.remove('fade-in');
+            });
+
+            // Activate selected button
+            const activeBtn = document.querySelector(`[data-target="${tabId}"]`);
+            activeBtn.classList.remove('tab-inactive');
+            activeBtn.classList.add('tab-active');
+
+            // Show selected pane
+            const activePane = document.getElementById(tabId);
+            activePane.classList.remove('hidden');
+            // Trigger reflow for animation
+            void activePane.offsetWidth;
+            activePane.classList.add('fade-in');
+        }
+
+        // Modal Functions
+        function showModal(platformName) {
+            const modal = document.getElementById('details-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const content = document.getElementById('modal-content');
+            const nameSpan = document.getElementById('platform-name');
+            const titleSpan = document.getElementById('modal-title');
+
+            nameSpan.textContent = platformName;
+            titleSpan.textContent = platformName;
+
+            // Show modal container
+            modal.classList.remove('hidden');
+
+            // Add animation classes
+            backdrop.classList.add('modal-enter-backdrop');
+            content.classList.add('modal-enter');
+
+            // Prevent body scrolling
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('details-modal');
+            const backdrop = document.getElementById('modal-backdrop');
+            const content = document.getElementById('modal-content');
+
+            // Remove animation classes
+            backdrop.classList.remove('modal-enter-backdrop');
+            content.classList.remove('modal-enter');
+
+            // Hide modal container
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // Wait for animation to finish
+
+            // Restore body scrolling
+            document.body.style.overflow = '';
+        }
+
+        // Close modal on escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
