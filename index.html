@@ -38,6 +38,17 @@
         }
     </script>
     <style>
+        /* Data-viz tokens for the Scout mock-up.
+           Categorical order validated for CVD separation (worst adjacent ΔE 22.4). */
+        .viz-root {
+            --surface-1: #ffffff;
+            --series-1: #0d9488;
+            --series-2: #4a3aa7;
+            --series-3: #eb6834;
+            --series-4: #2a78d6;
+            --series-5: #eda100;
+            --grid: #e2e8f0;
+        }
         /* Offset anchor jumps so headings clear the 5rem fixed navbar */
         section[id] {
             scroll-margin-top: 6rem;
@@ -165,6 +176,7 @@
                 <div class="hidden md:flex space-x-6 lg:space-x-8">
                     <a href="#the-answer" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Market Answer</a>
                     <a href="#residential-dashboard" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Dashboard</a>
+                    <a href="#product-mockup" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Product</a>
                     <a href="#software-solutions" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Software</a>
                     <a href="#data-models" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">How It Works</a>
                     <a href="#sources" class="text-sm lg:text-base text-slate-600 hover:text-brand-600 font-medium transition-colors">Sources</a>
@@ -504,6 +516,388 @@
                     <p>Pricing reflects Central City Averages in USD.</p>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Product Mock-up Section -->
+    <section id="product-mockup" class="py-20 bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="mb-10 max-w-3xl">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-100 text-violet-700 text-sm font-bold mb-4">
+                    <i class="fa-solid fa-flask"></i> Product Concept &middot; Synthetic Demo Data
+                </div>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold text-navy-900 mb-4">CapYield Scout: The Map, Rebuilt for Investors</h2>
+                <p class="text-slate-600 text-lg mb-4">
+                    Consumer portals answer <em>"would I like living here?"</em>. They price a home and stop. An investor needs a different question answered on the same map: <strong>what does this asset earn, financed, after costs, and what breaks it?</strong>
+                </p>
+                <p class="text-slate-600">
+                    The mock-up below shows that map. Every pin carries a net cap rate instead of an asking price, and selecting one underwrites the deal end to end. <span class="font-semibold text-slate-800">All properties, prices and rents shown are synthetic</span> — but the maths is real: every figure recalculates from the inputs, so the model behaves exactly as a shipped product would.
+                </p>
+            </div>
+
+            <!-- ============ APP FRAME ============ -->
+            <div class="rounded-2xl border border-slate-300 shadow-2xl overflow-hidden bg-white viz-root">
+
+                <!-- Browser chrome -->
+                <div class="bg-slate-800 px-4 py-3 flex items-center gap-4">
+                    <div class="flex gap-1.5 shrink-0">
+                        <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                        <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                        <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+                    </div>
+                    <div class="flex-1 bg-slate-700 rounded-md px-3 py-1 text-xs text-slate-300 font-mono truncate">
+                        <i class="fa-solid fa-lock text-[9px] text-emerald-400 mr-2"></i><span id="scout-url">app.capyield.io/scout?market=lisbon&amp;strategy=ltr</span>
+                    </div>
+                    <span class="hidden sm:inline text-[10px] uppercase tracking-wider text-slate-400 font-bold shrink-0">Concept</span>
+                </div>
+
+                <!-- Filter row: one row, scopes everything below it -->
+                <div class="border-b border-slate-200 bg-white px-4 sm:px-5 py-4">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+                        <div class="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-lg px-3 py-2 text-sm font-semibold text-navy-900">
+                            <i class="fa-solid fa-location-dot text-brand-600"></i> Lisbon, Portugal
+                            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1"></i>
+                        </div>
+
+                        <div class="hidden sm:block w-px h-8 bg-slate-200"></div>
+
+                        <!-- Strategy toggle: drives the whole model -->
+                        <div class="inline-flex rounded-lg border border-slate-300 overflow-hidden shadow-sm" role="group" aria-label="Rental strategy">
+                            <button onclick="scoutSetStrategy('ltr')" id="strat-ltr" class="strat-btn px-3 py-2 text-sm font-semibold bg-brand-600 text-white transition-colors">Long-term</button>
+                            <button onclick="scoutSetStrategy('str')" id="strat-str" class="strat-btn px-3 py-2 text-sm font-semibold bg-white text-slate-600 hover:bg-slate-50 transition-colors border-l border-slate-300">Short-term</button>
+                        </div>
+
+                        <span class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700">
+                            Min gross yield <strong class="text-navy-900">5.5%</strong>
+                        </span>
+                        <span class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700">
+                            Max price <strong class="text-navy-900">&euro;600k</strong>
+                        </span>
+                        <span class="hidden md:inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700">
+                            Beds <strong class="text-navy-900">1+</strong>
+                        </span>
+                        <button class="inline-flex items-center gap-2 rounded-lg border border-dashed border-slate-300 px-3 py-2 text-sm text-slate-500 hover:border-brand-500 hover:text-brand-600 transition-colors">
+                            <i class="fa-solid fa-plus text-[10px]"></i> Add filter
+                        </button>
+
+                        <div class="ml-auto flex items-center gap-3 text-sm">
+                            <span class="text-slate-500"><strong id="scout-result-count" class="text-navy-900">5</strong> of 148 shown</span>
+                            <span class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 font-medium text-slate-700">
+                                <i class="fa-solid fa-arrow-down-wide-short text-slate-400"></i> Cap rate
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ============ SPLIT VIEW: MAP + RESULTS ============ -->
+                <div class="grid lg:grid-cols-5">
+
+                    <!-- MAP -->
+                    <div class="lg:col-span-3 relative bg-slate-100 min-h-[540px] border-b lg:border-b-0 lg:border-r border-slate-200">
+                        <svg viewBox="0 0 800 560" class="absolute inset-0 w-full h-full" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+                            <rect width="800" height="560" fill="#eef1f5"/>
+
+                            <!-- Yield heat layer: sequential teal ramp, light = low yield, dark = high -->
+                            <g id="heat-layer" opacity="0.78">
+                                <ellipse class="heat-blob" data-zone="0" cx="215" cy="405" rx="150" ry="105"/>
+                                <ellipse class="heat-blob" data-zone="1" cx="455" cy="330" rx="140" ry="110"/>
+                                <ellipse class="heat-blob" data-zone="2" cx="330" cy="185" rx="135" ry="100"/>
+                                <ellipse class="heat-blob" data-zone="3" cx="615" cy="180" rx="145" ry="115"/>
+                                <ellipse class="heat-blob" data-zone="4" cx="120" cy="185" rx="115" ry="95"/>
+                            </g>
+
+                            <!-- River -->
+                            <path d="M -20 500 Q 200 470 380 512 T 820 486 L 820 580 L -20 580 Z" fill="#c7d7e5"/>
+                            <path d="M -20 500 Q 200 470 380 512 T 820 486" fill="none" stroke="#a9c1d6" stroke-width="2"/>
+
+                            <!-- Park -->
+                            <path d="M 560 380 q 60 -40 120 -10 q 40 40 5 80 q -70 30 -115 -10 z" fill="#cfe3cd"/>
+
+                            <!-- Street grid: hairlines, recessive -->
+                            <g fill="none" stroke="#ffffff" stroke-width="7" opacity="0.85" stroke-linecap="round">
+                                <path d="M 0 120 H 800"/><path d="M 0 250 H 800"/><path d="M 0 370 H 800"/>
+                                <path d="M 150 0 V 500"/><path d="M 330 0 V 505"/><path d="M 520 0 V 500"/><path d="M 680 0 V 480"/>
+                                <path d="M 0 60 L 380 300 L 800 240"/>
+                                <path d="M 60 520 L 300 250 L 520 60"/>
+                            </g>
+                            <g fill="none" stroke="#ffffff" stroke-width="3" opacity="0.6">
+                                <path d="M 0 185 H 800"/><path d="M 0 310 H 800"/><path d="M 0 440 H 560"/>
+                                <path d="M 240 0 V 500"/><path d="M 430 0 V 505"/><path d="M 600 0 V 490"/>
+                            </g>
+
+                            <!-- District labels -->
+                            <g font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#475569" opacity="0.9">
+                                <text x="215" y="410" text-anchor="middle">BAIXA</text>
+                                <text x="455" y="335" text-anchor="middle">ARROIOS</text>
+                                <text x="330" y="190" text-anchor="middle">ANJOS</text>
+                                <text x="615" y="185" text-anchor="middle">AREEIRO</text>
+                                <text x="120" y="190" text-anchor="middle">ESTRELA</text>
+                                <text x="620" y="430" text-anchor="middle" font-weight="500" fill="#5f7d5c">Parque</text>
+                                <text x="400" y="545" text-anchor="middle" font-weight="500" fill="#7d94a8">Rio Tejo</text>
+                            </g>
+                        </svg>
+
+                        <!-- Pins: absolutely positioned, ≥24px hit targets -->
+                        <div id="scout-pins" class="absolute inset-0"></div>
+
+                        <!-- Layer switcher -->
+                        <div class="absolute top-4 left-4 bg-white/95 backdrop-blur rounded-lg shadow-lg border border-slate-200 p-1 flex flex-col gap-0.5 text-xs">
+                            <button onclick="scoutSetLayer('yield')" id="layer-yield" class="layer-btn text-left px-3 py-1.5 rounded font-semibold bg-brand-50 text-brand-700">Gross yield</button>
+                            <button onclick="scoutSetLayer('growth')" id="layer-growth" class="layer-btn text-left px-3 py-1.5 rounded font-medium text-slate-600 hover:bg-slate-100">Rent growth</button>
+                            <button onclick="scoutSetLayer('str')" id="layer-str" class="layer-btn text-left px-3 py-1.5 rounded font-medium text-slate-600 hover:bg-slate-100">STR density</button>
+                            <button onclick="scoutSetLayer('price')" id="layer-price" class="layer-btn text-left px-3 py-1.5 rounded font-medium text-slate-600 hover:bg-slate-100">Price / m&sup2;</button>
+                        </div>
+
+                        <!-- Sequential scale legend (required for a continuous scale) -->
+                        <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur rounded-lg shadow-lg border border-slate-200 px-3 py-2.5">
+                            <p id="scout-legend-title" class="text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-1.5">Gross yield by district</p>
+                            <div class="flex items-center gap-0.5">
+                                <span class="w-8 h-3 rounded-l" style="background:#ccfbf1"></span>
+                                <span class="w-8 h-3" style="background:#5eead4"></span>
+                                <span class="w-8 h-3" style="background:#2dd4bf"></span>
+                                <span class="w-8 h-3" style="background:#0d9488"></span>
+                                <span class="w-8 h-3 rounded-r" style="background:#115e59"></span>
+                            </div>
+                            <div class="flex justify-between text-[10px] text-slate-500 mt-1 font-medium tabular-nums">
+                                <span id="scout-legend-lo">4.5%</span><span id="scout-legend-hi">8.5%</span>
+                            </div>
+                        </div>
+
+                        <div class="absolute top-4 right-4 flex flex-col bg-white rounded-lg shadow-lg border border-slate-200 overflow-hidden">
+                            <button class="px-2.5 py-1.5 text-slate-600 hover:bg-slate-50 border-b border-slate-200"><i class="fa-solid fa-plus text-xs"></i></button>
+                            <button class="px-2.5 py-1.5 text-slate-600 hover:bg-slate-50"><i class="fa-solid fa-minus text-xs"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- RESULTS LIST -->
+                    <div class="lg:col-span-2 bg-white">
+                        <div class="px-4 py-3 border-b border-slate-200 flex items-center justify-between">
+                            <p class="text-xs uppercase tracking-wider font-bold text-slate-500">Ranked by net cap rate</p>
+                            <span class="text-[10px] text-slate-400"><i class="fa-solid fa-circle-info"></i> synthetic</span>
+                        </div>
+                        <div id="scout-cards" class="divide-y divide-slate-100 max-h-[480px] overflow-y-auto custom-scrollbar"></div>
+                    </div>
+                </div>
+
+                <!-- ============ DETAIL / UNDERWRITING PANEL ============ -->
+                <div class="border-t-4 border-brand-500 bg-slate-50">
+
+                    <!-- Property header -->
+                    <div class="px-5 sm:px-6 py-5 bg-white border-b border-slate-200 flex flex-wrap items-start justify-between gap-4">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span id="detail-badge" class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-700">Top 5% yield</span>
+                                <span id="detail-district" class="text-xs text-slate-500 font-medium">Arroios &middot; Lisbon</span>
+                            </div>
+                            <h3 id="detail-address" class="text-2xl font-bold text-navy-900">Av. Almirante Reis 132</h3>
+                            <p id="detail-specs" class="text-sm text-slate-600 mt-1">2 bed &middot; 1 bath &middot; 65 m&sup2; &middot; Apartment, 1962</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-xs uppercase tracking-wider font-bold text-slate-500 mb-1">Deal score</p>
+                            <!-- Hero figure: sans, proportional figures -->
+                            <p id="detail-score" class="text-5xl font-black text-brand-600 leading-none">87</p>
+                            <p class="text-xs text-slate-500 mt-1">vs. market median 61</p>
+                        </div>
+                    </div>
+
+                    <!-- KPI row -->
+                    <div id="detail-kpis" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 divide-x divide-y lg:divide-y-0 divide-slate-200 bg-white border-b border-slate-200"></div>
+
+                    <!-- Charts + tables -->
+                    <div class="p-5 sm:p-6 grid lg:grid-cols-2 gap-6 items-start">
+
+                        <!-- Underwriting table -->
+                        <div class="bg-white rounded-xl border border-slate-200 p-5">
+                            <div class="flex items-center justify-between mb-4">
+                                <h4 class="font-bold text-navy-900">Underwriting</h4>
+                                <span id="detail-strategy-tag" class="text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600">Long-term let</span>
+                            </div>
+                            <table class="w-full text-sm">
+                                <caption class="sr-only">Annual underwriting breakdown for the selected property</caption>
+                                <tbody id="detail-underwriting" class="tabular-nums"></tbody>
+                            </table>
+                            <p id="detail-assumptions" class="text-[11px] text-slate-500 mt-4 pt-3 border-t border-slate-100 leading-relaxed"></p>
+                        </div>
+
+                        <!-- Operating cost composition -->
+                        <div class="bg-white rounded-xl border border-slate-200 p-5">
+                            <div class="flex items-center justify-between mb-1">
+                                <h4 class="font-bold text-navy-900">Where the rent goes</h4>
+                                <button onclick="scoutToggleTables()" id="scout-table-toggle" class="text-xs font-medium text-brand-600 hover:underline">
+                                    <i class="fa-solid fa-table-list mr-1"></i>Table view
+                                </button>
+                            </div>
+                            <p class="text-xs text-slate-500 mb-5">Composition of annual operating costs</p>
+
+                            <div class="scout-chart">
+                                <div id="opex-bar" class="flex w-full h-7 mb-4" role="img" aria-label="Stacked bar of annual operating costs by category"></div>
+                                <div id="opex-legend" class="grid grid-cols-2 gap-x-4 gap-y-2 text-xs"></div>
+                                <div id="opex-summary" class="mt-6 pt-5 border-t border-slate-100"></div>
+                            </div>
+                            <div class="scout-table hidden">
+                                <table class="w-full text-sm tabular-nums">
+                                    <thead><tr class="text-left text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200">
+                                        <th class="pb-2 font-semibold">Cost</th><th class="pb-2 font-semibold text-right">Annual</th><th class="pb-2 font-semibold text-right">% of rent</th>
+                                    </tr></thead>
+                                    <tbody id="opex-table" class="divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Five-year projection -->
+                        <div class="bg-white rounded-xl border border-slate-200 p-5">
+                            <h4 class="font-bold text-navy-900 mb-1">Five-year total return</h4>
+                            <p class="text-xs text-slate-500 mb-5">Cumulative, assuming 3.0% appreciation and 2.5% rent growth</p>
+
+                            <div class="scout-chart">
+                                <div class="flex gap-4 mb-3 text-xs" id="proj-legend"></div>
+                                <div id="proj-chart"></div>
+                            </div>
+                            <div class="scout-table hidden">
+                                <table class="w-full text-sm tabular-nums">
+                                    <thead><tr class="text-left text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200">
+                                        <th class="pb-2 font-semibold">Year</th><th class="pb-2 font-semibold text-right">Cash flow</th><th class="pb-2 font-semibold text-right">Principal</th><th class="pb-2 font-semibold text-right">Appreciation</th><th class="pb-2 font-semibold text-right">Total</th>
+                                    </tr></thead>
+                                    <tbody id="proj-table" class="divide-y divide-slate-100"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Strategy comparison + risk -->
+                        <div class="bg-white rounded-xl border border-slate-200 p-5">
+                            <h4 class="font-bold text-navy-900 mb-1">Long-term vs short-term</h4>
+                            <p class="text-xs text-slate-500 mb-5">Net annual cash flow after debt service, same property</p>
+
+                            <div class="flex gap-4 mb-3 text-xs">
+                                <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:var(--series-1)"></span><span class="text-slate-600">Long-term let</span></span>
+                                <span class="inline-flex items-center gap-1.5"><span class="w-3 h-3 rounded-sm" style="background:var(--series-2)"></span><span class="text-slate-600">Short-term let</span></span>
+                            </div>
+                            <div id="compare-chart" class="space-y-3 mb-5"></div>
+
+                            <div class="pt-4 border-t border-slate-100">
+                                <h5 class="text-xs uppercase tracking-wider font-bold text-slate-500 mb-3">Risk signals</h5>
+                                <ul id="detail-risks" class="space-y-2 text-sm"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Comparables -->
+                    <div class="px-5 sm:px-6 pb-6">
+                        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden">
+                            <div class="px-5 py-4 border-b border-slate-200">
+                                <h4 class="font-bold text-navy-900">Recent comparable lets &amp; sales</h4>
+                                <p class="text-xs text-slate-500 mt-0.5">Within 400 m, last 90 days &mdash; the evidence behind the rent estimate</p>
+                            </div>
+                            <div class="overflow-x-auto custom-scrollbar">
+                                <table class="w-full text-sm min-w-[640px]">
+                                    <thead>
+                                        <tr class="bg-slate-50 text-left text-xs uppercase tracking-wider text-slate-500 border-b border-slate-200">
+                                            <th class="px-5 py-3 font-semibold">Address</th>
+                                            <th class="px-5 py-3 font-semibold">Type</th>
+                                            <th class="px-5 py-3 font-semibold text-right">Size</th>
+                                            <th class="px-5 py-3 font-semibold text-right">Achieved</th>
+                                            <th class="px-5 py-3 font-semibold text-right">Per m&sup2;</th>
+                                            <th class="px-5 py-3 font-semibold text-right">Days on market</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="detail-comps" class="divide-y divide-slate-100 tabular-nums"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============ MOBILE ALERTS + VALUE PROPS ============ -->
+            <div class="mt-16 grid lg:grid-cols-5 gap-10 items-center">
+
+                <!-- Phone mock-up -->
+                <div class="lg:col-span-2 flex justify-center">
+                    <div class="relative w-[280px] rounded-[2.5rem] bg-navy-900 p-3 shadow-2xl border-4 border-slate-800">
+                        <div class="absolute top-3 left-1/2 -translate-x-1/2 w-24 h-5 bg-navy-900 rounded-b-2xl z-10"></div>
+                        <div class="bg-slate-50 rounded-[2rem] overflow-hidden">
+                            <div class="px-5 pt-8 pb-3 flex justify-between text-[10px] font-semibold text-navy-900">
+                                <span>9:41</span>
+                                <span class="flex gap-1"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-three-quarters"></i></span>
+                            </div>
+
+                            <!-- Push notification -->
+                            <div class="mx-3 mb-3 bg-white/95 backdrop-blur rounded-2xl shadow-lg border border-slate-200 p-3">
+                                <div class="flex items-center gap-2 mb-1.5">
+                                    <div class="w-5 h-5 rounded bg-brand-600 flex items-center justify-center"><i class="fa-solid fa-chart-line text-[9px] text-white"></i></div>
+                                    <span class="text-[10px] font-bold text-slate-700 uppercase tracking-wide">CapYield</span>
+                                    <span class="text-[10px] text-slate-400 ml-auto">now</span>
+                                </div>
+                                <p class="text-xs font-bold text-navy-900">New deal matches "Lisbon 7%+"</p>
+                                <p class="text-[11px] text-slate-600 mt-0.5 leading-snug">Rua Gomes Freire 21 &mdash; 7.4% cap, &euro;244k, 11.8% cash-on-cash. Listed 40 min ago.</p>
+                            </div>
+
+                            <div class="px-3 pb-4">
+                                <p class="text-[10px] uppercase tracking-wider font-bold text-slate-500 mb-2 px-1">Watchlist &middot; 3 alerts</p>
+                                <div class="bg-white rounded-xl border border-slate-200 p-3 mb-2">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <div>
+                                            <p class="text-xs font-bold text-navy-900">Rua Gomes Freire 21</p>
+                                            <p class="text-[10px] text-slate-500">Anjos &middot; 1 bed &middot; 54 m&sup2;</p>
+                                        </div>
+                                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-700">7.4%</span>
+                                    </div>
+                                    <div class="flex gap-1">
+                                        <div class="flex-1 h-1.5 rounded-full" style="background:var(--series-1)"></div>
+                                        <div class="flex-1 h-1.5 rounded-full bg-slate-200"></div>
+                                    </div>
+                                    <p class="text-[10px] text-slate-500 mt-1.5">Cash flow &euro;418/mo after debt</p>
+                                </div>
+                                <div class="bg-white rounded-xl border border-slate-200 p-3 opacity-70">
+                                    <div class="flex justify-between items-start">
+                                        <div>
+                                            <p class="text-xs font-bold text-navy-900">Praça do Chile 5</p>
+                                            <p class="text-[10px] text-slate-500">Areeiro &middot; price cut &minus;4.2%</p>
+                                        </div>
+                                        <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-brand-100 text-brand-700">6.3%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Value props -->
+                <div class="lg:col-span-3">
+                    <h3 class="text-2xl md:text-3xl font-serif font-bold text-navy-900 mb-3">Why this is a business, not a feature</h3>
+                    <p class="text-slate-600 mb-8">
+                        The data in the dashboard above is already public. The product is the layer that turns it into a decision &mdash; and that layer is where the willingness to pay sits.
+                    </p>
+                    <div class="grid sm:grid-cols-2 gap-5">
+                        <div class="bg-slate-50 rounded-xl border border-slate-200 p-5">
+                            <div class="w-9 h-9 rounded-lg bg-brand-600 text-white flex items-center justify-center mb-3"><i class="fa-solid fa-stopwatch"></i></div>
+                            <h4 class="font-bold text-navy-900 mb-1">Underwriting in seconds</h4>
+                            <p class="text-sm text-slate-600">A spreadsheet model per property takes 30&ndash;60 minutes. Scout runs it on every listing in a market before the investor opens one.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl border border-slate-200 p-5">
+                            <div class="w-9 h-9 rounded-lg bg-violet-600 text-white flex items-center justify-center mb-3"><i class="fa-solid fa-code-compare"></i></div>
+                            <h4 class="font-bold text-navy-900 mb-1">Both strategies, one model</h4>
+                            <p class="text-sm text-slate-600">Long-term and short-term returns computed off the same asset, with local licensing risk priced in rather than assumed away.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl border border-slate-200 p-5">
+                            <div class="w-9 h-9 rounded-lg bg-orange-500 text-white flex items-center justify-center mb-3"><i class="fa-solid fa-bell"></i></div>
+                            <h4 class="font-bold text-navy-900 mb-1">Deal flow, not search</h4>
+                            <p class="text-sm text-slate-600">Saved criteria become alerts. The edge in yield investing is being first to a mispriced asset, and that is a retention mechanic.</p>
+                        </div>
+                        <div class="bg-slate-50 rounded-xl border border-slate-200 p-5">
+                            <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center mb-3"><i class="fa-solid fa-globe"></i></div>
+                            <h4 class="font-bold text-navy-900 mb-1">One model, many markets</h4>
+                            <p class="text-sm text-slate-600">Tax, financing and vacancy norms are per-market parameters. Adding a country is a configuration exercise, not a rebuild.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="mt-10 text-xs text-slate-500 bg-slate-50 border border-slate-200 rounded-lg p-4 leading-relaxed">
+                <i class="fa-solid fa-circle-info text-slate-400 mr-1"></i>
+                <strong>On the data:</strong> every property, address, price, rent and comparable in this mock-up is invented for illustration and does not describe a real listing. The financial model is genuine &mdash; cap rates, cash-on-cash returns, amortisation and projections are computed live from the inputs shown, so the relationships between the numbers hold. Market-level figures elsewhere on this page are sourced separately; see <a href="#sources" class="text-brand-600 hover:underline">Data Sources</a>.
+            </p>
         </div>
     </section>
 
@@ -953,5 +1347,455 @@
             }
         });
     </script>
+    <!-- CapYield Scout mock-up: synthetic listings, real arithmetic -->
+    <script>
+    (function () {
+        // ---- Market assumptions. Real products expose these; here they are fixed. ----
+        const A = {
+            ltv: 0.70, rate: 0.035, years: 30, closing: 0.07,
+            vacancy: 0.05, mgmt: 0.08, imi: 0.0035, ins: 0.0015, maint: 0.006,
+            strMgmt: 0.20, strOps: 0.15, strUtilities: 2100, strMaint: 0.010,
+            appreciation: 0.030, rentGrowth: 0.025
+        };
+
+        // ---- Synthetic listings. Invented addresses; prices/rents sit in Lisbon's real range. ----
+        const PROPERTIES = [
+            { id: 'p1', address: 'Rua Gomes Freire 21', district: 'Anjos', zone: 2, x: 44, y: 27,
+              beds: 1, baths: 1, sqm: 54, built: 1948, price: 244000, rent: 1520, adr: 118, occ: 0.72,
+              dom: 12, cut: 0, badge: 'Highest yield',
+              risks: [ ['good','Rent 8% below district median — headroom on renewal'],
+                       ['warning','Pre-1951 building: energy retrofit likely within 5 years'],
+                       ['serious','Short-term licence (AL) suspended in this parish'] ],
+              comps: [ ['Rua do Forno 8','Let','48 m²','€1,380/mo','€25.6','9 days'],
+                       ['Rua Gomes Freire 60','Let','57 m²','€1,610/mo','€28.2','14 days'],
+                       ['Rua da Palma 112','Sale','52 m²','€232,000','€4,462','61 days'] ] },
+
+            { id: 'p2', address: 'Av. Almirante Reis 132', district: 'Arroios', zone: 1, x: 59, y: 55,
+              beds: 2, baths: 1, sqm: 65, built: 1962, price: 272000, rent: 1660, adr: 132, occ: 0.74,
+              dom: 28, cut: 3.2, badge: 'Best risk-adjusted',
+              risks: [ ['good','Metro 200 m — sustained tenant demand'],
+                       ['good','Short-term licence transferable with the sale'],
+                       ['warning','Main road frontage: glazing upgrade budgeted at €6,400'] ],
+              comps: [ ['Av. Almirante Reis 88','Let','63 m²','€1,590/mo','€25.2','11 days'],
+                       ['Rua Morais Soares 41','Let','70 m²','€1,720/mo','€24.6','19 days'],
+                       ['Av. Almirante Reis 210','Sale','68 m²','€281,500','€4,140','44 days'] ] },
+
+            { id: 'p3', address: 'Praça do Chile 5', district: 'Areeiro', zone: 3, x: 76, y: 28,
+              beds: 2, baths: 2, sqm: 82, built: 1978, price: 318000, rent: 1840, adr: 128, occ: 0.68,
+              dom: 55, cut: 4.2, badge: 'Price cut',
+              risks: [ ['good','Vendor has reduced twice — negotiating room'],
+                       ['warning','Two comparable units listed on the same square'],
+                       ['warning','Lift retrofit levy under discussion by the condominium'] ],
+              comps: [ ['Av. Rio de Janeiro 14','Let','80 m²','€1,790/mo','€22.4','22 days'],
+                       ['Praça do Chile 11','Let','85 m²','€1,900/mo','€22.4','16 days'],
+                       ['Av. Almirante Reis 240','Sale','79 m²','€309,000','€3,911','73 days'] ] },
+
+            { id: 'p4', address: 'Rua da Prata 44', district: 'Baixa', zone: 0, x: 28, y: 68,
+              beds: 2, baths: 1, sqm: 78, built: 1910, price: 385000, rent: 2050, adr: 175, occ: 0.81,
+              dom: 41, cut: 0, badge: 'Strongest STR case',
+              risks: [ ['good','Tourist core: 81% short-term occupancy sustained'],
+                       ['serious','Licence cap in Baixa — no new AL registrations'],
+                       ['critical','Yield depends on a licence that cannot be replaced if lost'] ],
+              comps: [ ['Rua dos Correeiros 92','Let','74 m²','€1,980/mo','€26.8','26 days'],
+                       ['Rua da Prata 18','Sale','81 m²','€402,000','€4,963','38 days'],
+                       ['Rua Áurea 130','Sale','76 m²','€371,000','€4,882','52 days'] ] },
+
+            { id: 'p5', address: 'Rua do Poço dos Negros 8', district: 'Estrela', zone: 4, x: 14, y: 28,
+              beds: 3, baths: 2, sqm: 110, built: 1935, price: 520000, rent: 2480, adr: 190, occ: 0.70,
+              dom: 88, cut: 1.9, badge: 'Below hurdle',
+              risks: [ ['critical','Leveraged cash flow near zero — no margin for vacancy'],
+                       ['warning','88 days on market signals a soft price'],
+                       ['good','Prime address with the strongest capital growth record'] ],
+              comps: [ ['Rua da Esperança 55','Let','104 m²','€2,390/mo','€23.0','34 days'],
+                       ['Rua de São Bento 210','Let','115 m²','€2,610/mo','€22.7','29 days'],
+                       ['Rua do Poço dos Negros 40','Sale','108 m²','€541,000','€5,009','96 days'] ] }
+        ];
+
+        const eur = n => '€' + Math.round(n).toLocaleString('en-GB');
+        const pct = n => (n * 100).toFixed(1) + '%';
+        const pmt = (P, r, n) => P * r / (1 - Math.pow(1 + r, -n));
+
+        // ---- The model. Every displayed figure derives from here. ----
+        function underwrite(p, strategy) {
+            const isStr = strategy === 'str';
+            const gross = isStr ? p.adr * 365 * p.occ : p.rent * 12;
+
+            const costs = isStr ? [
+                ['Management (20%)', gross * A.strMgmt],
+                ['Cleaning & supplies', gross * A.strOps],
+                ['Utilities & internet', A.strUtilities],
+                ['Maintenance', p.price * A.strMaint],
+                ['IMI & insurance', p.price * (A.imi + A.ins)]
+            ] : [
+                ['Management (8%)', gross * A.mgmt],
+                ['Vacancy allowance (5%)', gross * A.vacancy],
+                ['Maintenance', p.price * A.maint],
+                ['IMI (property tax)', p.price * A.imi],
+                ['Insurance', p.price * A.ins]
+            ];
+
+            const opex = costs.reduce((s, c) => s + c[1], 0);
+            const noi = gross - opex;
+            const loan = p.price * A.ltv;
+            const debtService = pmt(loan, A.rate / 12, A.years * 12) * 12;
+            const cashIn = p.price * (1 - A.ltv) + p.price * A.closing;
+            const cashFlow = noi - debtService;
+
+            return {
+                gross, costs, opex, noi, loan, debtService, cashIn, cashFlow,
+                grossYield: gross / p.price,
+                capRate: noi / p.price,
+                coc: cashFlow / cashIn,
+                breakEven: (opex + debtService) / gross,
+                perSqm: p.price / p.sqm
+            };
+        }
+
+        // Cumulative five-year build-up: cash flow, principal repaid, appreciation.
+        function project(p, m) {
+            const rows = [];
+            let balance = m.loan, cumCash = 0, cumPrincipal = 0;
+            const monthly = pmt(m.loan, A.rate / 12, A.years * 12);
+
+            for (let year = 1; year <= 5; year++) {
+                let principalThisYear = 0;
+                for (let month = 0; month < 12; month++) {
+                    const interest = balance * (A.rate / 12);
+                    principalThisYear += monthly - interest;
+                    balance -= monthly - interest;
+                }
+                cumPrincipal += principalThisYear;
+                cumCash += m.cashFlow * Math.pow(1 + A.rentGrowth, year - 1);
+                const appreciation = p.price * (Math.pow(1 + A.appreciation, year) - 1);
+                rows.push({ year, cash: cumCash, principal: cumPrincipal, appreciation,
+                            total: cumCash + cumPrincipal + appreciation });
+            }
+            return rows;
+        }
+
+        // ---- State ----
+        let selectedId = 'p2', strategy = 'ltr', layer = 'yield', tablesVisible = false;
+
+        const LAYERS = {
+            yield:  { title: 'Long-term gross yield by district', lo: '5.5%', hi: '7.6%', order: [4, 3, 1, 2, 0] },
+            growth: { title: 'Rent growth, 3-yr annualised', lo: '2.1%', hi: '6.4%', order: [3, 4, 0, 1, 2] },
+            str:    { title: 'Short-term rental density', lo: '2%',    hi: '31%',   order: [2, 1, 3, 4, 0] },
+            price:  { title: 'Median price per m²',       lo: '€3.9k', hi: '€5.0k', order: [1, 2, 0, 4, 3] }
+        };
+        const RAMP = ['#ccfbf1', '#5eead4', '#2dd4bf', '#0d9488', '#115e59'];
+
+        const STATUS = {
+            good:     ['#0ca30c', 'fa-circle-check',           'Positive'],
+            warning:  ['#fab219', 'fa-triangle-exclamation',   'Watch'],
+            serious:  ['#ec835a', 'fa-circle-exclamation',     'Serious'],
+            critical: ['#d03b3b', 'fa-circle-radiation',       'Critical']
+        };
+
+        // ---- Rendering ----
+        function renderMap() {
+            const cfg = LAYERS[layer];
+            document.getElementById('scout-legend-title').textContent = cfg.title;
+            document.getElementById('scout-legend-lo').textContent = cfg.lo;
+            document.getElementById('scout-legend-hi').textContent = cfg.hi;
+
+            document.querySelectorAll('.heat-blob').forEach(blob => {
+                const zone = Number(blob.dataset.zone);
+                blob.setAttribute('fill', RAMP[cfg.order.indexOf(zone)]);
+            });
+
+            document.getElementById('scout-pins').innerHTML = PROPERTIES.map(p => {
+                const m = underwrite(p, strategy);
+                const on = p.id === selectedId;
+                return `<button onclick="scoutSelect('${p.id}')" aria-label="${p.address}, cap rate ${pct(m.capRate)}"
+                    class="absolute -translate-x-1/2 -translate-y-1/2 px-2.5 py-1.5 rounded-full text-xs font-bold shadow-md
+                           transition-all hover:scale-110 hover:z-30 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1
+                           ${on ? 'bg-navy-900 text-white ring-2 ring-white z-20 scale-110' : 'bg-white text-navy-900 border border-slate-300 z-10'}"
+                    style="left:${p.x}%;top:${p.y}%;min-width:52px;min-height:28px">${pct(m.capRate)}</button>`;
+            }).join('');
+        }
+
+        function renderCards() {
+            document.getElementById('scout-cards').innerHTML = PROPERTIES.map(p => {
+                const m = underwrite(p, strategy);
+                const on = p.id === selectedId;
+                return `<button onclick="scoutSelect('${p.id}')" class="w-full text-left p-4 flex gap-3 transition-colors
+                        ${on ? 'bg-brand-50 border-l-4 border-brand-500' : 'hover:bg-slate-50 border-l-4 border-transparent'}">
+                    <div class="w-16 h-16 rounded-lg shrink-0 flex items-center justify-center text-white"
+                         style="background:linear-gradient(135deg,#334155,#64748b)">
+                        <i class="fa-solid fa-building text-lg opacity-70"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <div class="flex items-start justify-between gap-2">
+                            <p class="font-bold text-navy-900 text-sm truncate">${p.address}</p>
+                            <span class="text-sm font-black text-navy-900 shrink-0">${eur(p.price / 1000)}k</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mb-2">${p.district} · ${p.beds} bed · ${p.sqm} m² · ${eur(m.perSqm)}/m²</p>
+                        <div class="flex flex-wrap gap-1.5 text-[11px]">
+                            <span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold tabular-nums">Cap ${pct(m.capRate)}</span>
+                            <span class="px-1.5 py-0.5 rounded bg-slate-100 text-slate-700 font-semibold tabular-nums">Gross ${pct(m.grossYield)}</span>
+                            <span class="px-1.5 py-0.5 rounded ${m.cashFlow > 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'} font-semibold tabular-nums">${eur(m.cashFlow / 12)}/mo</span>
+                        </div>
+                    </div>
+                </button>`;
+            }).join('');
+        }
+
+        function renderDetail() {
+            const p = PROPERTIES.find(x => x.id === selectedId);
+            const m = underwrite(p, strategy);
+            const alt = underwrite(p, strategy === 'ltr' ? 'str' : 'ltr');
+
+            document.getElementById('detail-address').textContent = p.address;
+            document.getElementById('detail-district').textContent = p.district + ' · Lisbon';
+            document.getElementById('detail-specs').textContent =
+                `${p.beds} bed · ${p.baths} bath · ${p.sqm} m² · Apartment, ${p.built}`;
+            document.getElementById('detail-badge').textContent = p.badge;
+            document.getElementById('detail-strategy-tag').textContent =
+                strategy === 'ltr' ? 'Long-term let' : 'Short-term let';
+
+            // Deal score: yield vs a 4.5% cap benchmark, tempered by leveraged cash flow.
+            const score = Math.max(5, Math.min(99, Math.round(
+                52 + (m.capRate - 0.045) * 1400 + Math.min(m.coc, 0.08) * 240)));
+            document.getElementById('detail-score').textContent = score;
+
+            const rate = (A.rate * 100).toFixed(1) + '%';
+            document.getElementById('detail-assumptions').textContent = strategy === 'ltr'
+                ? `Assumes ${Math.round((1 - A.ltv) * 100)}% down at ${rate} over ${A.years} years, ${Math.round(A.closing * 100)}% acquisition costs (IMT + stamp + legal), ${Math.round(A.vacancy * 100)}% vacancy, and Portuguese IMI at ${(A.imi * 100).toFixed(2)}% of value. Every input is editable in-product.`
+                : `Assumes ${Math.round((1 - A.ltv) * 100)}% down at ${rate} over ${A.years} years, ${Math.round(A.closing * 100)}% acquisition costs, ${p.occ * 100}% occupancy at €${p.adr} ADR, and ${Math.round(A.strMgmt * 100)}% full-service management. Occupancy and ADR are editable in-product.`;
+
+            document.getElementById('detail-kpis').innerHTML = [
+                ['Gross yield', pct(m.grossYield), strategy === 'ltr' ? 'Annual rent ÷ price' : 'Annual revenue ÷ price'],
+                ['Net cap rate', pct(m.capRate), 'NOI ÷ price'],
+                ['Cash-on-cash', pct(m.coc), 'After debt service'],
+                ['Monthly cash flow', eur(m.cashFlow / 12), 'Net of everything'],
+                ['Break-even occupancy', Math.round(m.breakEven * 100) + '%', 'Where cash flow hits zero']
+            ].map(([label, value, note]) => `
+                <div class="p-4">
+                    <p class="text-[11px] uppercase tracking-wider font-bold text-slate-500 mb-1">${label}</p>
+                    <p class="text-2xl font-black text-navy-900 leading-none">${value}</p>
+                    <p class="text-[11px] text-slate-500 mt-1.5">${note}</p>
+                </div>`).join('');
+
+            const row = (label, value, opts = {}) => `
+                <tr class="${opts.rule ? 'border-t border-slate-200' : ''}">
+                    <td class="py-2 ${opts.bold ? 'font-bold text-navy-900' : 'text-slate-600'} ${opts.indent ? 'pl-4' : ''}">${label}</td>
+                    <td class="py-2 text-right ${opts.bold ? 'font-bold text-navy-900' : 'text-slate-700'}">${value}</td>
+                </tr>`;
+
+            document.getElementById('detail-underwriting').innerHTML =
+                row('Purchase price', eur(p.price)) +
+                row('Acquisition costs (7%)', eur(p.price * A.closing), { indent: true }) +
+                row('Deposit (30%)', eur(p.price * (1 - A.ltv)), { indent: true }) +
+                row('Total cash in', eur(m.cashIn), { bold: true, rule: true }) +
+                row(strategy === 'ltr' ? 'Gross annual rent' : 'Gross annual revenue', eur(m.gross), { bold: true, rule: true }) +
+                m.costs.map(c => row(c[0], '−' + eur(c[1]), { indent: true })).join('') +
+                row('Net operating income', eur(m.noi), { bold: true, rule: true }) +
+                row('Debt service', '−' + eur(m.debtService), { indent: true }) +
+                row('Net annual cash flow', eur(m.cashFlow), { bold: true, rule: true });
+
+            renderOpex(m);
+            renderProjection(p, m);
+            renderCompare(p, m, alt);
+
+            document.getElementById('detail-risks').innerHTML = p.risks.map(([level, text]) => {
+                const [color, icon, word] = STATUS[level];
+                return `<li class="flex gap-2.5 items-start">
+                    <i class="fa-solid ${icon} mt-0.5 shrink-0" style="color:${color}" aria-hidden="true"></i>
+                    <span class="text-slate-700"><span class="sr-only">${word}: </span>${text}</span>
+                </li>`;
+            }).join('');
+
+            document.getElementById('detail-comps').innerHTML = p.comps.map(c => `
+                <tr class="hover:bg-slate-50">
+                    <td class="px-5 py-3 font-medium text-navy-900">${c[0]}</td>
+                    <td class="px-5 py-3"><span class="px-1.5 py-0.5 rounded text-xs font-semibold ${c[1] === 'Let' ? 'bg-brand-50 text-brand-700' : 'bg-slate-100 text-slate-600'}">${c[1]}</span></td>
+                    <td class="px-5 py-3 text-right text-slate-600">${c[2]}</td>
+                    <td class="px-5 py-3 text-right font-semibold text-navy-900">${c[3]}</td>
+                    <td class="px-5 py-3 text-right text-slate-600">${c[4]}</td>
+                    <td class="px-5 py-3 text-right text-slate-600">${c[5]}</td>
+                </tr>`).join('');
+        }
+
+        // Stacked bar: 2px surface gaps, labels only where they fit, legend carries every value.
+        function renderOpex(m) {
+            const total = m.opex;
+            document.getElementById('opex-bar').innerHTML = m.costs.map((c, i) => {
+                const share = c[1] / total;
+                const first = i === 0, last = i === m.costs.length - 1;
+                const radius = first ? 'border-radius:4px 0 0 4px' : last ? 'border-radius:0 4px 4px 0' : '';
+                const label = share >= 0.16 ? Math.round(share * 100) + '%' : '';
+                return `<div class="relative group flex items-center justify-center text-[10px] font-bold text-white"
+                             style="width:${share * 100}%;background:var(--series-${i + 1});${radius};${last ? '' : 'margin-right:2px'}"
+                             title="${c[0]}: ${eur(c[1])}">${label}
+                        </div>`;
+            }).join('');
+
+            document.getElementById('opex-legend').innerHTML = m.costs.map((c, i) => `
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-sm shrink-0" style="background:var(--series-${i + 1})"></span>
+                    <span class="text-slate-600 truncate">${c[0]}</span>
+                    <span class="ml-auto font-semibold text-slate-800 tabular-nums shrink-0">${eur(c[1])}</span>
+                </div>`).join('');
+
+            // A meter reads better than a second chart: one ratio against its limit.
+            const costRatio = total / m.gross;
+            document.getElementById('opex-summary').innerHTML = `
+                <div class="flex items-baseline justify-between mb-2">
+                    <span class="text-xs uppercase tracking-wider font-bold text-slate-500">Operating margin</span>
+                    <span class="text-sm font-bold text-navy-900 tabular-nums">${pct(1 - costRatio)} of gross rent</span>
+                </div>
+                <div class="h-3 w-full rounded-sm overflow-hidden flex" style="background:var(--grid)">
+                    <div style="width:${(1 - costRatio) * 100}%;background:var(--series-1)"></div>
+                    <div style="width:2px;background:var(--surface-1)"></div>
+                </div>
+                <div class="flex justify-between text-[11px] text-slate-500 mt-1.5 tabular-nums">
+                    <span>${eur(m.noi)} kept</span>
+                    <span>${eur(total)} spent (${pct(costRatio)})</span>
+                </div>
+                <p class="text-[11px] text-slate-500 mt-4 leading-relaxed">
+                    Debt service is excluded here — it is financing, not an operating cost.
+                    After the ${eur(m.debtService)} mortgage, ${eur(m.cashFlow)} reaches the investor.
+                </p>`;
+
+            document.getElementById('opex-table').innerHTML = m.costs.map(c => `
+                <tr><td class="py-2 text-slate-600">${c[0]}</td>
+                    <td class="py-2 text-right font-medium text-navy-900">${eur(c[1])}</td>
+                    <td class="py-2 text-right text-slate-600">${(c[1] / m.gross * 100).toFixed(1)}%</td></tr>`).join('') +
+                `<tr class="border-t-2 border-slate-200 font-bold">
+                    <td class="py-2 text-navy-900">Total operating cost</td>
+                    <td class="py-2 text-right text-navy-900">${eur(total)}</td>
+                    <td class="py-2 text-right text-navy-900">${(total / m.gross * 100).toFixed(1)}%</td></tr>`;
+        }
+
+        // Stacked columns. One axis only; the y-scale is shared by all three series.
+        function renderProjection(p, m) {
+            const rows = project(p, m);
+            const peak = Math.max(...rows.map(r => Math.max(r.total, 0)));
+            const step = Math.pow(10, Math.floor(Math.log10(peak / 3)));
+            const tick = Math.ceil(peak / 3 / step) * step;
+            const top = tick * 3;
+
+            const series = [
+                ['Cash flow', 'cash', 1],
+                ['Principal repaid', 'principal', 2],
+                ['Appreciation', 'appreciation', 3]
+            ];
+
+            document.getElementById('proj-legend').innerHTML = series.map(([name, , slot]) => `
+                <span class="inline-flex items-center gap-1.5">
+                    <span class="w-3 h-3 rounded-sm" style="background:var(--series-${slot})"></span>
+                    <span class="text-slate-600">${name}</span>
+                </span>`).join('');
+
+            const gridlines = [0, 1, 2, 3].map(i => `
+                <div class="absolute left-0 right-0 flex items-center" style="bottom:${i / 3 * 100}%">
+                    <span class="text-[10px] text-slate-400 tabular-nums w-12 shrink-0 -mb-3">${eur(tick * i / 1000)}k</span>
+                    <span class="flex-1 h-px" style="background:var(--grid)"></span>
+                </div>`).join('');
+
+            const columns = rows.map((r, i) => {
+                const seg = (key, slot, roundTop) => {
+                    const h = Math.max(r[key], 0) / top * 100;
+                    return `<div class="w-full transition-all" title="Year ${r.year} ${key}: ${eur(r[key])}"
+                                 style="height:${h}%;background:var(--series-${slot});${roundTop ? 'border-radius:4px 4px 0 0' : ''}"></div>`;
+                };
+                const isLast = i === rows.length - 1;
+                return `<div class="flex-1 flex flex-col items-center min-w-0">
+                    <div class="relative w-full flex justify-center" style="height:170px">
+                        ${isLast ? `<span class="absolute -top-1 left-1/2 -translate-x-1/2 text-[11px] font-bold text-navy-900 tabular-nums whitespace-nowrap">${eur(r.total / 1000)}k</span>` : ''}
+                        <div class="flex flex-col justify-end" style="width:22px;height:100%;gap:2px">
+                            ${seg('appreciation', 3, true)}
+                            ${seg('principal', 2, false)}
+                            ${seg('cash', 1, false)}
+                        </div>
+                    </div>
+                    <span class="text-[11px] text-slate-500 mt-2">Y${r.year}</span>
+                </div>`;
+            }).join('');
+
+            document.getElementById('proj-chart').innerHTML = `
+                <div class="flex gap-2 pl-12">
+                    <div class="relative flex-1 flex gap-2" style="padding-top:14px">
+                        <div class="absolute inset-0 -ml-12" style="top:14px;bottom:26px">${gridlines}</div>
+                        ${columns}
+                    </div>
+                </div>`;
+
+            document.getElementById('proj-table').innerHTML = rows.map(r => `
+                <tr><td class="py-2 text-slate-600">Year ${r.year}</td>
+                    <td class="py-2 text-right text-slate-700">${eur(r.cash)}</td>
+                    <td class="py-2 text-right text-slate-700">${eur(r.principal)}</td>
+                    <td class="py-2 text-right text-slate-700">${eur(r.appreciation)}</td>
+                    <td class="py-2 text-right font-bold text-navy-900">${eur(r.total)}</td></tr>`).join('');
+        }
+
+        function renderCompare(p, m, alt) {
+            const ltr = strategy === 'ltr' ? m : alt;
+            const str = strategy === 'ltr' ? alt : m;
+            const peak = Math.max(Math.abs(ltr.cashFlow), Math.abs(str.cashFlow), 1);
+
+            const bar = (label, value, slot) => `
+                <div>
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-slate-600">${label}</span>
+                        <span class="font-bold text-navy-900 tabular-nums">${eur(value)}/yr</span>
+                    </div>
+                    <div class="h-4 w-full rounded-sm" style="background:var(--grid)">
+                        <div style="width:${Math.max(Math.abs(value) / peak * 100, 2)}%;height:100%;background:var(--series-${slot});border-radius:0 4px 4px 0"></div>
+                    </div>
+                </div>`;
+
+            document.getElementById('compare-chart').innerHTML =
+                bar('Long-term let', ltr.cashFlow, 1) +
+                bar('Short-term let', str.cashFlow, 2) +
+                `<p class="text-xs text-slate-500 pt-1 leading-relaxed">
+                    Short-term revenue is ${(str.gross / ltr.gross).toFixed(1)}× the long-term rent, but management,
+                    cleaning and utilities absorb ${Math.round((str.opex / str.gross) * 100)}% of it — leaving
+                    ${str.cashFlow > ltr.cashFlow ? eur(str.cashFlow - ltr.cashFlow) + ' of extra cash flow' : 'less cash flow'}
+                    before any licensing risk.</p>`;
+        }
+
+        function renderAll() { renderMap(); renderCards(); renderDetail(); }
+
+        // ---- Controls ----
+        window.scoutSelect = function (id) { selectedId = id; renderAll(); };
+
+        window.scoutSetStrategy = function (s) {
+            strategy = s;
+            ['ltr', 'str'].forEach(k => {
+                const btn = document.getElementById('strat-' + k);
+                const on = k === s;
+                btn.className = 'strat-btn px-3 py-2 text-sm font-semibold transition-colors ' +
+                    (on ? 'bg-brand-600 text-white' : 'bg-white text-slate-600 hover:bg-slate-50') +
+                    (k === 'str' ? ' border-l border-slate-300' : '');
+            });
+            const url = document.getElementById('scout-url');
+            if (url) url.textContent = 'app.capyield.io/scout?market=lisbon&strategy=' + s;
+            renderAll();
+        };
+
+        window.scoutSetLayer = function (l) {
+            layer = l;
+            ['yield', 'growth', 'str', 'price'].forEach(k => {
+                const btn = document.getElementById('layer-' + k);
+                btn.className = 'layer-btn text-left px-3 py-1.5 rounded ' +
+                    (k === l ? 'font-semibold bg-brand-50 text-brand-700' : 'font-medium text-slate-600 hover:bg-slate-100');
+            });
+            renderMap();
+        };
+
+        window.scoutToggleTables = function () {
+            tablesVisible = !tablesVisible;
+            document.querySelectorAll('.scout-chart').forEach(el => el.classList.toggle('hidden', tablesVisible));
+            document.querySelectorAll('.scout-table').forEach(el => el.classList.toggle('hidden', !tablesVisible));
+            document.getElementById('scout-table-toggle').innerHTML = tablesVisible
+                ? '<i class="fa-solid fa-chart-simple mr-1"></i>Chart view'
+                : '<i class="fa-solid fa-table-list mr-1"></i>Table view';
+        };
+
+        renderAll();
+    })();
+    </script>
+
 </body>
 </html>

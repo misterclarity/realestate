@@ -26,6 +26,25 @@ The site goes live at `https://<username>.github.io/<repository>/` a minute or
 two later. `.nojekyll` is committed so GitHub serves the files as-is instead of
 running them through Jekyll.
 
+## The Scout mock-up
+
+`#product-mockup` is a product concept, not a data section. Everything in it —
+addresses, prices, rents, comparables — is invented, and the section says so in
+three places.
+
+The arithmetic, however, is real and lives in the last `<script>` block. Given a
+price and a rent it computes operating costs, NOI, cap rate, an amortisation
+schedule, leveraged cash flow, cash-on-cash, break-even occupancy and a
+five-year return build-up. Change `A` (the assumptions object) or any listing's
+`price` / `rent` / `adr` / `occ` and every figure, chart and map pin recomputes.
+Nothing in that section is a hardcoded number, which is what keeps the panel
+self-consistent as you edit it.
+
+Chart colours come from validated tokens on `.viz-root`. The categorical order
+(teal → violet → orange → blue → yellow) was checked for colour-blind
+separation; re-run the check before substituting hues. Both charts have a table
+view behind the "Table view" toggle.
+
 ## Data
 
 Figures are drawn from the public sources listed in the "Data Sources &
